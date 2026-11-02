@@ -38,7 +38,7 @@ builder.Services.AddMediatR(options =>
     options.RegisterServicesFromAssembly(typeof(LoginCommand).Assembly);
 });
 builder.Services.AddAuthorization();
-builder.Services.AddSingleton<TokenProvider>();
+builder.Services.AddSingleton<ITokenProvider, JwtTokenProvider>();
 builder.Services.AddOpenApi();
 var connectionString = builder.Configuration
     .GetConnectionString("DbConnection");
@@ -62,6 +62,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
 app.UseExceptionHandler();
 app.UseSwagger();
 app.UseSwaggerUI();

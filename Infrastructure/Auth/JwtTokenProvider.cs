@@ -10,7 +10,7 @@ using Microsoft.Extensions.Options;
 
 namespace Amsberg_digital_universe.Infrastructure.Auth;
 
-public class TokenProvider(IOptions<AuthOptions> options)
+public class JwtTokenProvider(IOptions<AuthOptions> options):ITokenProvider
 {
     private readonly AuthOptions _options = options.Value;
 

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace Amsberg_digital_universe.Features.Auth.Login;
 
-public class LoginHandler(AppDbContext context, IOptions<HasherOptions> hasherOptions)
+public class LoginHandler(AppDbContext context, ITokenProvider tokenProvider, IOptions<HasherOptions> hasherOptions)
     : IRequestHandler<LoginCommand, LoginResponse>
 {
     private readonly HasherOptions _hasherOptions = hasherOptions.Value;
@@ -21,6 +21,7 @@ public class LoginHandler(AppDbContext context, IOptions<HasherOptions> hasherOp
         var hashedPassword = PasswordHasher.Hash(request.Password, Encoding.ASCII.GetBytes(_hasherOptions.Secret));
         if (hashedPassword != user.PasswordHash)
             throw new UnauthorizedAccessException($"Email or password is incorrect");
-        return new LoginResponse { Token = "token", RefreshToken = "refresh" };
+        var jwtToken = tokenProvider.GetToken(user);
+        return new LoginResponse { Token = jwtToken, RefreshToken = "refresh" };
     }
 }
