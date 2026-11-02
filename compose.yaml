@@ -1,0 +1,25 @@
+﻿services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    volumes:
+      - mssql_data:/var/opt/mssql
+    ports:
+      - "127.0.0.1:1433:1433"
+
+  backend:
+    image: amsberg_digital_universe
+    container_name: Amsberg
+    ports:
+      - "127.0.0.1:8081:8081"
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+volumes:
+  mssql_data:

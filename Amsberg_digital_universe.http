@@ -1,0 +1,6 @@
+@Amsberg_digital_universe_HostAddress = http://localhost:5285
+
+GET {{Amsberg_digital_universe_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
