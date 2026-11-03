@@ -11,15 +11,16 @@ public static class ConfirmRegistrationEndpoint
     [Authorize]
     public static void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/auth/confirm/{code}", async ([FromQuery] string code,ClaimsPrincipal user,ISender sender, CancellationToken ct) =>
-        {
-            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if(userId == null)
-                return Results.Unauthorized();
-            
-            var command = new ConfirmRegistrationCommand(code,Guid.Parse(userId));
-            await sender.Send(command,ct);
-            return Results.Ok();
-        });
+        app.MapPost("/auth/confirm/{code}",
+            async ([FromQuery] string code, ClaimsPrincipal user, ISender sender, CancellationToken ct) =>
+            {
+                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userId == null)
+                    return Results.Unauthorized();
+
+                var command = new ConfirmRegistrationCommand(code, Guid.Parse(userId));
+                await sender.Send(command, ct);
+                return Results.Ok();
+            });
     }
 }

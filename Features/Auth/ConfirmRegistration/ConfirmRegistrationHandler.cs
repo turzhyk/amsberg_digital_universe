@@ -30,8 +30,6 @@ public class ConfirmRegistrationHandler(TimeProvider timeProvider, AppDbContext 
         }
         if (!userCode.Active)
         {
-            // release after delay
-            await ReleaseNewCode(user.Id, now);
             return;
         }
         
@@ -44,7 +42,7 @@ public class ConfirmRegistrationHandler(TimeProvider timeProvider, AppDbContext 
         await context.SaveChangesAsync(ct);
     }
 
-    public async Task ReleaseNewCode(Guid userId, DateTime now)
+    private async Task ReleaseNewCode(Guid userId, DateTime now)
     {
         var newCode = ConfirmToken.Create(userId, now, TimeSpan.FromMinutes(2));
         await context.UserConfirmTokens.AddAsync(newCode);

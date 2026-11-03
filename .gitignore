@@ -1,0 +1,37 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+.vscode/
+
+# JetBrains Rider / ReSharper
+.idea/
+_ReSharper*/
+*.sln.iml
+
+# Test results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# Publish output
+[Pp]ublish/
+artifacts/
+
+# Temporary files
+[Tt]emp/
+[Tt]mp/
+*.tmp
+*.temp
+*.log
+
+.env
+
+obj/
+bin/

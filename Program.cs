@@ -1,11 +1,14 @@
 using System.Text;
 using Amsberg_digital_universe.Domain.Common;
 using Amsberg_digital_universe.Domain.Common.Extensions;
+using Amsberg_digital_universe.Features.Auth.ConfirmRegistration;
 using Amsberg_digital_universe.Features.Auth.Login;
 using Amsberg_digital_universe.Features.Auth.Register;
+using Amsberg_digital_universe.Features.Auth.SendNewEmailCode;
 using Amsberg_digital_universe.Infrastructure;
 using Amsberg_digital_universe.Infrastructure.Auth;
 using Amsberg_digital_universe.Infrastructure.Persistence;
+using Amsberg_digital_universe.Infrastructure.Persistence.Seeders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -52,11 +55,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+builder.Services.AddSeeders();
+
+
 var app = builder.Build();
+await app.Services.SeedDb();
 
 
 RegisterEndpoint.AddRoutes(app);
 LoginEndpoint.AddRoutes(app);
+ConfirmRegistrationEndpoint.AddRoutes(app);
+SendNewEmailCodeEndpoint.AddRoutes(app);
 
 if (app.Environment.IsDevelopment())
 {
