@@ -2,13 +2,13 @@ namespace Amsberg_digital_universe.Domain.User;
 
 public class User
 {
-    public Guid Id { get; set; }
-    
-    public string Email { get; set; }
-    public string Login { get; set; }
-    public string PasswordHash { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public bool Confirmed { get; set; } = false;
+    public Guid Id { get; private set; }
+
+    public string Email { get; private set; }
+    public string Login { get; private set; }
+    public string PasswordHash { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public bool Confirmed { get; private set; } = false;
 
     public static User Register(string email, string login, string passwordHash, DateTime now)
         => new()
@@ -19,4 +19,11 @@ public class User
             PasswordHash = passwordHash,
             CreatedAt = now
         };
+
+    public bool IsEmailConfirmed() => Confirmed;
+
+    public void ConfirmEmail()
+    {
+        Confirmed = true;
+    }
 }

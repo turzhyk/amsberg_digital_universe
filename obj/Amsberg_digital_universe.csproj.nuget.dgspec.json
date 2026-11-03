@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\New\\RiderProjects\\amsberg_digital_universe\\Amsberg_digital_universe.csproj": {}
+    "/Users/ricardo/RiderProjects/Amsberg_digital_universe/Amsberg_digital_universe/Amsberg_digital_universe.csproj": {}
   },
   "projects": {
-    "C:\\Users\\New\\RiderProjects\\amsberg_digital_universe\\Amsberg_digital_universe.csproj": {
+    "/Users/ricardo/RiderProjects/Amsberg_digital_universe/Amsberg_digital_universe/Amsberg_digital_universe.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\New\\RiderProjects\\amsberg_digital_universe\\Amsberg_digital_universe.csproj",
+        "projectUniqueName": "/Users/ricardo/RiderProjects/Amsberg_digital_universe/Amsberg_digital_universe/Amsberg_digital_universe.csproj",
         "projectName": "Amsberg_digital_universe",
-        "projectPath": "C:\\Users\\New\\RiderProjects\\amsberg_digital_universe\\Amsberg_digital_universe.csproj",
-        "packagesPath": "C:\\Users\\New\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\New\\RiderProjects\\amsberg_digital_universe\\obj\\",
+        "projectPath": "/Users/ricardo/RiderProjects/Amsberg_digital_universe/Amsberg_digital_universe/Amsberg_digital_universe.csproj",
+        "packagesPath": "/Users/ricardo/.nuget/packages/",
+        "outputPath": "/Users/ricardo/RiderProjects/Amsberg_digital_universe/Amsberg_digital_universe/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\New\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/ricardo/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.400"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
@@ -100,7 +100,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.403/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.102/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
