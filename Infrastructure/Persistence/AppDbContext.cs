@@ -1,3 +1,4 @@
+using Amsberg_digital_universe.Domain.Common.Post;
 using Amsberg_digital_universe.Domain.Common.Profile;
 using Amsberg_digital_universe.Domain.Common.User;
 using Amsberg_digital_universe.Domain.User;
@@ -11,6 +12,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<ConfirmToken> UserConfirmTokens => Set<ConfirmToken>();
     public DbSet<Profile> Profiles => Set<Profile>();
 
+    public DbSet<Post> Posts => Set<Post>();
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Profile>(_builder =>
@@ -18,9 +21,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             _builder.HasIndex(x => x.Username).IsUnique();
             _builder.HasIndex(x => x.Id).IsUnique();
         });
-        builder.Entity<User>(_builder =>
+        builder.Entity<User>(_builder => { _builder.HasIndex(x => x.Id).IsUnique(); });
+        builder.Entity<Post>(b =>
         {
-            _builder.HasIndex(x => x.Id).IsUnique();
+            b.HasIndex(x => x.Id).IsUnique();
+            b.HasOne(x => x.Profile).WithMany(p => p.Posts)
+                .HasForeignKey(x => x.ProfileId);
         });
     }
 }
