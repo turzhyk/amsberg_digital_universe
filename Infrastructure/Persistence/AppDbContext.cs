@@ -20,8 +20,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         {
             _builder.HasIndex(x => x.Username).IsUnique();
             _builder.HasIndex(x => x.Id).IsUnique();
+            
         });
-        builder.Entity<User>(_builder => { _builder.HasIndex(x => x.Id).IsUnique(); });
+        builder.Entity<User>(b =>
+        {
+            b.HasIndex(x => x.Id).IsUnique();
+            b.HasOne(x => x.Profile).WithOne(x => x.User).HasForeignKey<Profile>(p => p.Id);
+        });
         builder.Entity<Post>(b =>
         {
             b.HasIndex(x => x.Id).IsUnique();

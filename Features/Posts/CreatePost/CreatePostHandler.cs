@@ -1,4 +1,5 @@
-﻿using Amsberg_digital_universe.Domain.Common.Post;
+﻿using System.Diagnostics;
+using Amsberg_digital_universe.Domain.Common.Post;
 using Amsberg_digital_universe.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ public class CreatePostHandler(AppDbContext context, TimeProvider time)
         var profile = await context.Profiles
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.UserId == request.UserId, ct);
+        Console.WriteLine(request.UserId);
         if (profile is null)
             throw new KeyNotFoundException("profile not found");
 
