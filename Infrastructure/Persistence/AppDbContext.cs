@@ -32,6 +32,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.HasIndex(x => x.Id).IsUnique();
             b.HasOne(x => x.Profile).WithMany(p => p.Posts)
                 .HasForeignKey(x => x.ProfileId);
+            b.HasIndex(x => x.IdempotencyKey).IsUnique();
+            b.Property(x => x.RowVersion).IsRowVersion();
         });
     }
 }

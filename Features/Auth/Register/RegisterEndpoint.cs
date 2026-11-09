@@ -7,7 +7,7 @@ public static class RegisterEndpoint
 {
     public static void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/auth/register",
+        app.MapPost("/register",
             async ([FromBody] RegisterCommand request, ISender sender, CancellationToken ct) =>
             {
                 var id = await sender.Send(request, ct);

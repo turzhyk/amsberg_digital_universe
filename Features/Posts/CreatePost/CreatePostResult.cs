@@ -2,5 +2,5 @@
 
 public enum CreatePostResult
 {
-    Success, Invalid, Timeout   
+    Success, Invalid, Timeout, NotDraft
 }

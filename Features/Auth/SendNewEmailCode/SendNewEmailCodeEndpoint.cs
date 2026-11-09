@@ -9,7 +9,7 @@ public static class SendNewEmailCodeEndpoint
     [Authorize]
     public static void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/auth/code/new", async (ClaimsPrincipal user, ISender sender, CancellationToken ct) =>
+        app.MapPost("/code/new", async (ClaimsPrincipal user, ISender sender, CancellationToken ct) =>
         {
             var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)

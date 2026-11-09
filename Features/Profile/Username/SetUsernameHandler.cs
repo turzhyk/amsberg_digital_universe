@@ -26,7 +26,7 @@ public class SetUsernameHandler(AppDbContext context) : IRequestHandler<SetUsern
         {
             await context.SaveChangesAsync(ct);
         }
-        catch (DbUpdateException e) when (e.InnerException is SqlException sqlE && (sqlE.Number == 2601||sqlE.Number == 2627))
+        catch (DbUpdateException e) when (e.InnerException is SqlException sqlE && (sqlE.Number == 2601 || sqlE.Number == 2627))
         {
             return SetUsernameResult.Taken;
         }

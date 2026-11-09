@@ -13,6 +13,8 @@ public class ConfirmToken
     public int MaxAttempts { get; private set; } = 3;
     public int RetryCount { get; private set; } = 0;
     public bool Active { get; private set; } = true;
+    public bool Sent { get; private set; } = false;
+    public int SendAttempts { get; private set; } = 0;
 
     private ConfirmToken()
     {

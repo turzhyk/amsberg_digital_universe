@@ -7,7 +7,7 @@ public static class LoginEndpoint
 {
     public static void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/auth/login", 
+        app.MapPost("/login", 
             async ([FromBody]LoginCommand loginCommand, ISender sender, CancellationToken ct) =>
         {
             var result = await sender.Send(loginCommand, ct);

@@ -11,7 +11,7 @@ public static class ConfirmRegistrationEndpoint
     [Authorize]
     public static void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/auth/confirm/{code}",
+        app.MapPost("/confirm/{code}",
             async ([FromQuery] string code, ClaimsPrincipal user, ISender sender, CancellationToken ct) =>
             {
                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
