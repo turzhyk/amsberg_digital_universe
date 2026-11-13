@@ -7,7 +7,7 @@ public class Profile
     public Domain.User.User User { get; init; } = null!;
     public string Username { get; private set; } = "";
     public string? IconUrl { get; private set; } 
-    public ICollection<Post.Post> Posts { get; init; } = new List<Post.Post>();
+    public ICollection<Domain.Post.Post> Posts { get; init; } = new List<Domain.Post.Post>();
 
     public static Profile Create() => new()
     {

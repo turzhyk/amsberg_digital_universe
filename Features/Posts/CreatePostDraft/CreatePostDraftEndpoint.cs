@@ -14,6 +14,6 @@ public static class CreatePostDraftEndpoint
             if(userId == null)
                 throw new UnauthorizedAccessException();
             
-        });
+        })    .RequireAuthorization();;
     }
 }

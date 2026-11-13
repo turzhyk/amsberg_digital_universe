@@ -8,7 +8,6 @@ namespace Amsberg_digital_universe.Features.Auth.ConfirmRegistration;
 
 public static class ConfirmRegistrationEndpoint
 {
-    [Authorize]
     public static void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("/confirm/{code}",
@@ -21,6 +20,6 @@ public static class ConfirmRegistrationEndpoint
                 var command = new ConfirmRegistrationCommand(code, Guid.Parse(userId));
                 await sender.Send(command, ct);
                 return Results.Ok();
-            });
+            }).RequireAuthorization();
     }
 }

@@ -12,8 +12,9 @@ public class User
     public string PasswordHash { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public bool Confirmed { get; private set; } = false;
+    public UserRole Role { get; private set; } = UserRole.Default;
 
-    public static User Register(string email, string login, string passwordHash, DateTime now)
+public static User Register(string email, string login, string passwordHash, DateTime now)
         => new()
         {
             Id = Guid.CreateVersion7(),

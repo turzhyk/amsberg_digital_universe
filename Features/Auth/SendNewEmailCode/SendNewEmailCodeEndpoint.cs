@@ -6,7 +6,6 @@ namespace Amsberg_digital_universe.Features.Auth.SendNewEmailCode;
 
 public static class SendNewEmailCodeEndpoint
 {
-    [Authorize]
     public static void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("/code/new", async (ClaimsPrincipal user, ISender sender, CancellationToken ct) =>
@@ -16,6 +15,6 @@ public static class SendNewEmailCodeEndpoint
                 return Results.Unauthorized();
             await sender.Send(new SendNewEmailCodeCommand(Guid.Parse(userId)), ct);
             return Results.Ok();
-        });
+        }).RequireAuthorization();
     }
 }

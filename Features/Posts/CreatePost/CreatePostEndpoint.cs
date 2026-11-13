@@ -14,8 +14,12 @@ public static class CreatePostEndpoint
                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (userId == null)
                     throw new UnauthorizedAccessException();
-                var command = new CreatePostCommand(Guid.Parse(userId), request.IdempotencyKey, request.Content);
+                var command = new CreatePostCommand
+                (Guid.Parse(userId),
+                    request.IdempotencyKey,
+                    request.Content,
+                    request.PublishTime);
                 await sender.Send(command, ct);
-            });
+            })    .RequireAuthorization();;
     }
 }

@@ -16,7 +16,7 @@ public class EditPostHandler(AppDbContext context, TimeProvider time):IRequestHa
         var post = await context.Posts
             .FirstOrDefaultAsync(x => x.Id == command.PostId,ct);
         
-        post.Edit(command.Content);
+        post.Edit(command.Content, null, now);
 
         await context.SaveChangesAsync(ct);
     }

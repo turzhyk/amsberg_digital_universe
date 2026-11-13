@@ -7,7 +7,6 @@ namespace Amsberg_digital_universe.Features.Posts.EditPost;
 
 public static class EditPostEndpoint
 {
-    [Authorize]
     public static void AddRoute(IEndpointRouteBuilder app)
     {
         app.MapPatch("/posts/{id}",
@@ -17,6 +16,6 @@ public static class EditPostEndpoint
                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 var newCommand = new EditPostCommand(command.PostId, Guid.Parse(userId), command.Content);
                 await sender.Send(command, ct);
-            });
+            })    .RequireAuthorization();;
     }
 }

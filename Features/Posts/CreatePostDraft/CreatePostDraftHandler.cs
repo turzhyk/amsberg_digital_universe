@@ -1,4 +1,5 @@
 using Amsberg_digital_universe.Domain.Common.Post;
+using Amsberg_digital_universe.Domain.Post;
 using Amsberg_digital_universe.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.Data.SqlClient;
@@ -17,7 +18,7 @@ public class CreatePostDraftHandler(AppDbContext context, TimeProvider time) : I
             .Select(x => x.Id)
             .FirstOrDefaultAsync(ct);
         if(profileId == Guid.Empty)
-            throw new UnauthorizedAccessException();
+            throw new KeyNotFoundException();
             
         var draft = Post.CreateDraft(command.IdempotencyKey, profileId, now);
         context.Posts.Add(draft);

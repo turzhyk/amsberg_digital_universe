@@ -25,7 +25,7 @@ public class CreatePostHandler(AppDbContext context, TimeProvider time)
         if (!post.IsDraft)
             return CreatePostResult.Success;
 
-        post.Publish(command.Content, now, null);
+        post.Build(command.Content, now, null, command.PublishTime);
 
         try
         {

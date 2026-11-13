@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Amsberg_digital_universe.Domain.Common;
 using Amsberg_digital_universe.Domain.Common.Extensions;
@@ -32,6 +33,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Secret)),
         ValidAudience = jwtOptions.Audience,
         ValidIssuer = jwtOptions.Issuer,
+        RoleClaimType = ClaimTypes.Role
     };
 });
 
@@ -82,6 +84,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseExceptionHandler();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 

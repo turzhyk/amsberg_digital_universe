@@ -1,6 +1,8 @@
+using Amsberg_digital_universe.Domain.Comment;
 using Amsberg_digital_universe.Domain.Common.Post;
 using Amsberg_digital_universe.Domain.Common.Profile;
 using Amsberg_digital_universe.Domain.Common.User;
+using Amsberg_digital_universe.Domain.Post;
 using Amsberg_digital_universe.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +15,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Profile> Profiles => Set<Profile>();
 
     public DbSet<Post> Posts => Set<Post>();
+    public DbSet<Comment> Comments => Set<Comment>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -20,7 +23,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         {
             _builder.HasIndex(x => x.Username).IsUnique();
             _builder.HasIndex(x => x.Id).IsUnique();
-            
         });
         builder.Entity<User>(b =>
         {
@@ -33,6 +35,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.HasOne(x => x.Profile).WithMany(p => p.Posts)
                 .HasForeignKey(x => x.ProfileId);
             b.HasIndex(x => x.IdempotencyKey).IsUnique();
+            b.Property(x => x.RowVersion).IsRowVersion();
+        });
+
+        builder.Entity<Comment>(b =>
+        {
+            b.HasKey(x => x.Id);
+            b.HasIndex(x => new { x.AuthorId, x.IdempotencyKey }).IsUnique();
             b.Property(x => x.RowVersion).IsRowVersion();
         });
     }
