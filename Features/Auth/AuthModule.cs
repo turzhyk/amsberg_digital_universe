@@ -1,4 +1,5 @@
 using Amsberg_digital_universe.Features.Auth.ConfirmRegistration;
+using Amsberg_digital_universe.Features.Auth.GetUserData;
 using Amsberg_digital_universe.Features.Auth.Login;
 using Amsberg_digital_universe.Features.Auth.Register;
 using Amsberg_digital_universe.Features.Auth.SendNewEmailCode;
@@ -15,5 +16,6 @@ public static class AuthModule
         LoginEndpoint.AddRoutes(group);
         ConfirmRegistrationEndpoint.AddRoutes(group);
         SendNewEmailCodeEndpoint.AddRoutes(group);
+        GetUserDataEndpoint.AddRoutes(group);
     }
 }

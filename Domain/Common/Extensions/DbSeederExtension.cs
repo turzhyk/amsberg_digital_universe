@@ -1,6 +1,6 @@
 ﻿using Amsberg_digital_universe.Infrastructure.Persistence.Seeders;
 
-namespace Amsberg_digital_universe.Domain.Common.Extensions;
+namespace Amsberg_digital_universe.Domain.Extensions;
 
 public static class DbSeederExtension
 {

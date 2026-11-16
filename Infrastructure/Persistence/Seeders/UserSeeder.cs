@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Amsberg_digital_universe.Domain.Common.Profile;
+using Amsberg_digital_universe.Domain.Profile;
 using Amsberg_digital_universe.Domain.User;
 using Amsberg_digital_universe.Infrastructure.Auth;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +21,7 @@ public class UserSeeder(AppDbContext context, TimeProvider time, IOptions<Hasher
         {
             var passwordHash = PasswordHasher.Hash("0000", Encoding.ASCII.GetBytes(_hasherOptions.Secret));
             var adminUser = User.Seed(adminId, "admin@local", "Admin", passwordHash, now);
-            var adminProfile = Profile.Seed(adminId,adminId, "admin");
+            var adminProfile = Profile.Seed(adminId, adminUser, "admin");
             context.Users.Add(adminUser);
             context.Profiles.Add(adminProfile);
             await context.SaveChangesAsync();

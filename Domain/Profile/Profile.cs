@@ -1,24 +1,25 @@
-﻿namespace Amsberg_digital_universe.Domain.Common.Profile;
+﻿namespace Amsberg_digital_universe.Domain.Profile;
 
 public class Profile
 {
     public Guid Id { get; private set; }
     public Guid UserId { get; private set; }
-    public Domain.User.User User { get; init; } = null!;
+    public User.User User { get; init; } = null!;
     public string Username { get; private set; } = "";
     public string? IconUrl { get; private set; } 
     public ICollection<Domain.Post.Post> Posts { get; init; } = new List<Domain.Post.Post>();
 
-    public static Profile Create() => new()
+    public static Profile Create(Guid userId) => new()
     {
         Id = Guid.CreateVersion7(),
-        Username = Guid.CreateVersion7().ToString()
+        Username = Guid.CreateVersion7().ToString(),
+        UserId = userId
     };
 
-    public static Profile Seed(Guid id, Guid userId, string username) => new()
+    public static Profile Seed(Guid id, User.User user, string username) => new()
     {
         Id = id,
-        UserId = userId,
+        User = user,
         Username = username,
     };
     public void SetUsername(string username)

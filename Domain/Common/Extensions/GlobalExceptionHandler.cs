@@ -1,7 +1,8 @@
+using Amsberg_digital_universe.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Amsberg_digital_universe.Domain.Common.Extensions;
+namespace Amsberg_digital_universe.Domain.Extensions;
 
 public class GlobalExceptionHandler(IProblemDetailsService service) : IExceptionHandler
 {
@@ -11,6 +12,7 @@ public class GlobalExceptionHandler(IProblemDetailsService service) : IException
         {
             ArgumentNullException => StatusCodes.Status400BadRequest,
             KeyNotFoundException => StatusCodes.Status404NotFound,
+            ConfirmTokenInvalidException => StatusCodes.Status404NotFound,
             _ => StatusCodes.Status500InternalServerError,
         };
         var problemDetails = new ProblemDetails
@@ -20,7 +22,8 @@ public class GlobalExceptionHandler(IProblemDetailsService service) : IException
             Instance = context.Request.Path.Value,
         };
         problemDetails.Extensions["timestamp"] = DateTime.UtcNow;
+        context.Response.StatusCode = code;
         return await service.TryWriteAsync(new ProblemDetailsContext()
-            { HttpContext = context, ProblemDetails = problemDetails });
+            { HttpContext = context, ProblemDetails = problemDetails,  });
     }
 }

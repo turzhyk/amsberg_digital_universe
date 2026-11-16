@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Amsberg_digital_universe.Domain.Common;
+namespace Amsberg_digital_universe.Domain;
 
 public class AuthOptions
 {

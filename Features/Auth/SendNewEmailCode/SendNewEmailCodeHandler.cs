@@ -1,4 +1,4 @@
-﻿using Amsberg_digital_universe.Domain.Common.User;
+﻿using Amsberg_digital_universe.Domain.User;
 using Amsberg_digital_universe.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

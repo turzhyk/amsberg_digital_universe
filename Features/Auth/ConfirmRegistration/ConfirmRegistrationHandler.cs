@@ -1,6 +1,5 @@
 using System.Security.Authentication;
-using Amsberg_digital_universe.Domain.Common.Exceptions;
-using Amsberg_digital_universe.Domain.Common.User;
+using Amsberg_digital_universe.Domain.Exceptions;
 using Amsberg_digital_universe.Domain.User;
 using Amsberg_digital_universe.Infrastructure.Persistence;
 using MediatR;
@@ -17,7 +16,7 @@ public class ConfirmRegistrationHandler(TimeProvider timeProvider, AppDbContext 
         var user = await context.Users.FirstAsync(x => x.Id == request.UserId, ct);
         if(user.IsEmailConfirmed())
             return;
-        
+        Console.WriteLine($"USER ID IS {user.Id} TOKEN IS {request.Code}");
         var now = timeProvider.GetUtcNow().UtcDateTime;
         var userCode = await context.UserConfirmTokens
             .Where(x => x.UserId == request.UserId)
@@ -46,5 +45,6 @@ public class ConfirmRegistrationHandler(TimeProvider timeProvider, AppDbContext 
     {
         var newCode = ConfirmToken.Create(userId, now, TimeSpan.FromMinutes(2));
         await context.UserConfirmTokens.AddAsync(newCode);
+        await context.SaveChangesAsync();
     }
 }

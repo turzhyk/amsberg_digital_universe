@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using Amsberg_digital_universe.Domain.Common.Post;
+using Amsberg_digital_universe.Domain.Post;
 using Amsberg_digital_universe.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

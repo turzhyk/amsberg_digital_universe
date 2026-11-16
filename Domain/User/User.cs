@@ -1,12 +1,10 @@
-using Amsberg_digital_universe.Domain.Common.Profile;
-
 namespace Amsberg_digital_universe.Domain.User;
 
 public class User
 {
     public Guid Id { get; private set; }
     public Guid ProfileId { get; private set; }
-    public Profile Profile { get; init; } = null!;
+    public Profile.Profile Profile { get; init; } = null!;
     public string Email { get; private set; }
     public string Login { get; private set; }
     public string PasswordHash { get; private set; }
@@ -14,7 +12,7 @@ public class User
     public bool Confirmed { get; private set; } = false;
     public UserRole Role { get; private set; } = UserRole.Default;
 
-public static User Register(string email, string login, string passwordHash, DateTime now)
+    public static User Register(string email, string login, string passwordHash, DateTime now)
         => new()
         {
             Id = Guid.CreateVersion7(),
@@ -23,7 +21,8 @@ public static User Register(string email, string login, string passwordHash, Dat
             PasswordHash = passwordHash,
             CreatedAt = now
         };
-
+    public void SetProfileId(Profile.Profile profile) => ProfileId = profile.Id;
+//REMOVE
     public static User Seed(Guid id, string email, string login, string passwordHash, DateTime now)
         => new()
         {
@@ -33,12 +32,14 @@ public static User Register(string email, string login, string passwordHash, Dat
             PasswordHash = passwordHash,
             CreatedAt = now
         };
+
     public bool IsEmailConfirmed() => Confirmed;
 
     public void SetProfileId(Guid id)
     {
         ProfileId = id;
     }
+
     public void ConfirmEmail()
     {
         Confirmed = true;

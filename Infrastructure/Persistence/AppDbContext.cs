@@ -1,8 +1,6 @@
 using Amsberg_digital_universe.Domain.Comment;
-using Amsberg_digital_universe.Domain.Common.Post;
-using Amsberg_digital_universe.Domain.Common.Profile;
-using Amsberg_digital_universe.Domain.Common.User;
 using Amsberg_digital_universe.Domain.Post;
+using Amsberg_digital_universe.Domain.Profile;
 using Amsberg_digital_universe.Domain.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,16 +20,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         builder.Entity<Profile>(_builder =>
         {
             _builder.HasIndex(x => x.Username).IsUnique();
-            _builder.HasIndex(x => x.Id).IsUnique();
+            _builder.HasKey(x => x.Id);
         });
         builder.Entity<User>(b =>
         {
-            b.HasIndex(x => x.Id).IsUnique();
-            b.HasOne(x => x.Profile).WithOne(x => x.User).HasForeignKey<Profile>(p => p.Id);
+            b.HasKey(x => x.Id);
+            b.HasOne(x => x.Profile).WithOne(x => x.User).HasForeignKey<Profile>(p => p.UserId);
         });
         builder.Entity<Post>(b =>
         {
-            b.HasIndex(x => x.Id).IsUnique();
+            b.HasKey(x => x.Id);
             b.HasOne(x => x.Profile).WithMany(p => p.Posts)
                 .HasForeignKey(x => x.ProfileId);
             b.HasIndex(x => x.IdempotencyKey).IsUnique();

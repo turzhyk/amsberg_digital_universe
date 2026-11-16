@@ -1,4 +1,4 @@
-namespace Amsberg_digital_universe.Domain.Common.Exceptions;
+namespace Amsberg_digital_universe.Domain.Exceptions;
 
 public class ConfirmTokenInvalidException:Exception
 {

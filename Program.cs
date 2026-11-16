@@ -1,15 +1,18 @@
 using System.Security.Claims;
 using System.Text;
-using Amsberg_digital_universe.Domain.Common;
-using Amsberg_digital_universe.Domain.Common.Extensions;
+using Amsberg_digital_universe.Domain;
+using Amsberg_digital_universe.Domain.Extensions;
 using Amsberg_digital_universe.Features.Auth;
 using Amsberg_digital_universe.Features.Auth.ConfirmRegistration;
 using Amsberg_digital_universe.Features.Auth.Login;
 using Amsberg_digital_universe.Features.Auth.Register;
 using Amsberg_digital_universe.Features.Auth.SendNewEmailCode;
+using Amsberg_digital_universe.Features.Posts;
 using Amsberg_digital_universe.Features.Posts.CreatePost;
+using Amsberg_digital_universe.Features.Profile;
 using Amsberg_digital_universe.Infrastructure.Auth;
 using Amsberg_digital_universe.Infrastructure.Persistence;
+using Amsberg_digital_universe.Infrastructure.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +24,7 @@ AuthOptions jwtOptions = builder.Configuration.GetSection("Jwt").Get<AuthOptions
 
 builder.Services.Configure<HasherOptions>(builder.Configuration.GetSection("Hasher"));
 builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Jwt"));
+builder.Services.Configure<BlobStorageOptions>(builder.Configuration.GetSection("BlobStorage"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -75,15 +79,17 @@ builder.Services.AddSeeders();
 var app = builder.Build();
 await app.Services.SeedDb();
 
+
 app.MapAuth();
-CreatePostEndpoint.AddRoute(app);
+app.MapPosts();
+app.MapProfiles();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-// app.UseExceptionHandler();
+app.UseStaticFiles();
+app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSwagger();

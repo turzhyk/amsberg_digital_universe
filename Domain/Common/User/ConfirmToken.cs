@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Amsberg_digital_universe.Domain.Common.User;
+namespace Amsberg_digital_universe.Domain.User;
 
 public class ConfirmToken
 {

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Amsberg_digital_universe.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261104203622_ProfileSet")]
-    partial class ProfileSet
+    [Migration("20261114102351_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,11 +25,68 @@ namespace Amsberg_digital_universe.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Amsberg_digital_universe.Domain.Common.Post.Post", b =>
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.Comment.Comment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("IdempotencyKey")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDraft")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsEdited")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRemoved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRoot")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("AuthorId", "IdempotencyKey")
+                        .IsUnique();
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.Post.Post", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("CommentsCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
@@ -37,11 +94,23 @@ namespace Amsberg_digital_universe.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime?>("DelayedPublishDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("Edited")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("IdempotencyKey")
+                        .HasColumnType("uniqueidentifier");
+
                     b.PrimitiveCollection<string>("ImageUrls")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDelayed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDraft")
+                        .HasColumnType("bit");
 
                     b.Property<int>("LikeCount")
                         .HasColumnType("int");
@@ -49,9 +118,18 @@ namespace Amsberg_digital_universe.Migrations
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("PublishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
+                    b.HasIndex("IdempotencyKey")
                         .IsUnique();
 
                     b.HasIndex("ProfileId");
@@ -59,13 +137,13 @@ namespace Amsberg_digital_universe.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("Amsberg_digital_universe.Domain.Common.Profile.Profile", b =>
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.Profile.Profile", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("IconUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
@@ -77,7 +155,7 @@ namespace Amsberg_digital_universe.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id")
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.HasIndex("Username")
@@ -86,7 +164,7 @@ namespace Amsberg_digital_universe.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("Amsberg_digital_universe.Domain.Common.User.ConfirmToken", b =>
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.User.ConfirmToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,6 +181,12 @@ namespace Amsberg_digital_universe.Migrations
 
                     b.Property<int>("RetryCount")
                         .HasColumnType("int");
+
+                    b.Property<int>("SendAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Sent")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Token")
                         .IsRequired()
@@ -143,17 +227,34 @@ namespace Amsberg_digital_universe.Migrations
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
-                    b.HasIndex("Id")
-                        .IsUnique();
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Amsberg_digital_universe.Domain.Common.Post.Post", b =>
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.Comment.Comment", b =>
                 {
-                    b.HasOne("Amsberg_digital_universe.Domain.Common.Profile.Profile", "Profile")
+                    b.HasOne("Amsberg_digital_universe.Domain.Comment.Comment", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId");
+
+                    b.HasOne("Amsberg_digital_universe.Domain.Post.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.Post.Post", b =>
+                {
+                    b.HasOne("Amsberg_digital_universe.Domain.Profile.Profile", "Profile")
                         .WithMany("Posts")
                         .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -162,18 +263,18 @@ namespace Amsberg_digital_universe.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("Amsberg_digital_universe.Domain.Common.Profile.Profile", b =>
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.Profile.Profile", b =>
                 {
                     b.HasOne("Amsberg_digital_universe.Domain.User.User", "User")
                         .WithOne("Profile")
-                        .HasForeignKey("Amsberg_digital_universe.Domain.Common.Profile.Profile", "Id")
+                        .HasForeignKey("Amsberg_digital_universe.Domain.Profile.Profile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Amsberg_digital_universe.Domain.Common.Profile.Profile", b =>
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.Profile.Profile", b =>
                 {
                     b.Navigation("Posts");
                 });

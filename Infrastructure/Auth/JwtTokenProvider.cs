@@ -1,4 +1,4 @@
-using Amsberg_digital_universe.Domain.Common;
+using Amsberg_digital_universe.Domain;
 using Amsberg_digital_universe.Domain.User;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;

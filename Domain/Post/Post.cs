@@ -1,4 +1,4 @@
-﻿using Amsberg_digital_universe.Domain.Common.Profile;
+﻿using Amsberg_digital_universe.Domain.Profile;
 using Amsberg_digital_universe.Domain.Post;
 
 namespace Amsberg_digital_universe.Domain.Post;
@@ -13,7 +13,7 @@ public class Post
     public DateTime? DelayedPublishDate { get; private set; }
     public DateTime? PublishedAt { get; private set; }
     public Guid ProfileId { get; private set; }
-    public Profile Profile { get; init; } = null!;
+    public Profile.Profile Profile { get; init; } = null!;
     public string? Content { get; private set; }
     public bool Edited { get; private set; } = false;
     public int LikeCount { get; private set; }

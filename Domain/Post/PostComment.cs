@@ -1,4 +1,4 @@
-﻿namespace Amsberg_digital_universe.Domain.Common.Post;
+﻿namespace Amsberg_digital_universe.Domain.Post;
 
 public class PostComment
 {
