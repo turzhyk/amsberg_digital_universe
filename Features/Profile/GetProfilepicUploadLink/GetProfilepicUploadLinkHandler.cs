@@ -10,9 +10,15 @@ public class GetProfilepicUploadLinkHandler(IBlobStorage blobStorage, AppDbConte
 {
     public async Task<GetProfilepicUploadLinkResponse> Handle(GetProfilepicUploadLinkCommand request, CancellationToken ct)
     {
+        var container = "staging";
         var profileId = await context.GetProfileId(request.UserId, ct);
         var key = $"profilepics/{profileId}/{Guid.CreateVersion7()}";
-        var url = blobStorage.GetUploadLink("staging",key, request.ContentType, TimeSpan.FromMinutes(5));
+        var url = blobStorage.GetUploadLink(container,key, request.ContentType, TimeSpan.FromMinutes(5));
+        
+        var storageFile = StorageFile.Create(container, key, profileId);
+        context.StorageFiles.Add(storageFile);
+        await context.SaveChangesAsync(ct);
+        
         return new GetProfilepicUploadLinkResponse(url.ToString(), "x-ms-blob-type: BlockBlob", key);
     }
 }

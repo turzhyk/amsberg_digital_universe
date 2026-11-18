@@ -1,5 +1,6 @@
 using Amsberg_digital_universe.Domain.Common.Storage;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using Microsoft.Extensions.Options;
 
@@ -36,5 +37,13 @@ public class AzureBlobStorage(BlobServiceClient client, IOptions<BlobStorageOpti
             Port = publicUrl.Port,
         }.Uri;
         return response;
+    }
+
+    public async Task<BlobProperties?> GetPropertiesAsync(string container, string key, CancellationToken ct)
+    {
+        var containerClient = client.GetBlobContainerClient(container);
+        var blobClient = containerClient.GetBlobClient(key);
+        var properties = await blobClient.GetPropertiesAsync(cancellationToken:ct);
+        return properties;
     }
 }

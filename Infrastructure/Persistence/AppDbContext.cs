@@ -1,4 +1,5 @@
 using Amsberg_digital_universe.Domain.Comment;
+using Amsberg_digital_universe.Domain.Common.Storage;
 using Amsberg_digital_universe.Domain.Post;
 using Amsberg_digital_universe.Domain.Profile;
 using Amsberg_digital_universe.Domain.User;
@@ -14,6 +15,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<Comment> Comments => Set<Comment>();
+
+    public DbSet<StorageFile> StorageFiles => Set<StorageFile>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
