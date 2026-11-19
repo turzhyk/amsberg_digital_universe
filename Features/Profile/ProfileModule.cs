@@ -1,4 +1,5 @@
 using Amsberg_digital_universe.Features.Profile.GetProfile;
+using Amsberg_digital_universe.Features.Profile.GetProfilepicUploadLink;
 using Amsberg_digital_universe.Features.Profile.Username;
 
 namespace Amsberg_digital_universe.Features.Profile;
@@ -12,5 +13,7 @@ public static class ProfileModule
         group.RequireAuthorization();
         SetUsernameEndpoint.AddRoute(group);
         GetProfileEndpoint.AddRoutes(group);
+        GetProfilepicUploadLinkEndpoint.AddRoutes(group);
+        
     }
 }

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text;
 using Amsberg_digital_universe.Domain;
+using Amsberg_digital_universe.Domain.Common.Storage;
 using Amsberg_digital_universe.Domain.Extensions;
 using Amsberg_digital_universe.Features.Auth;
 using Amsberg_digital_universe.Features.Auth.ConfirmRegistration;
@@ -13,6 +14,7 @@ using Amsberg_digital_universe.Features.Profile;
 using Amsberg_digital_universe.Infrastructure.Auth;
 using Amsberg_digital_universe.Infrastructure.Persistence;
 using Amsberg_digital_universe.Infrastructure.Storage;
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -44,6 +46,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddMediatR(options => { options.RegisterServicesFromAssembly(typeof(RegisterCommand).Assembly); });
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<ITokenProvider, JwtTokenProvider>();
+
 builder.Services.AddOpenApi();
 var connectionString = builder.Configuration
     .GetConnectionString("DbConnection");
@@ -52,6 +55,13 @@ if (string.IsNullOrEmpty(connectionString))
     throw new Exception("Connection string is missing");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+
+builder.Services.AddSingleton(x =>
+{
+    var options = builder.Configuration.GetSection("BlobStorage").Get<BlobStorageOptions>();
+    return new BlobServiceClient(options.ConnectionString);
+});
+builder.Services.AddSingleton<IBlobStorage, AzureBlobStorage>();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -88,6 +98,13 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await context.Database.MigrateAsync();
+}
+
 app.UseStaticFiles();
 app.UseExceptionHandler();
 app.UseAuthentication();

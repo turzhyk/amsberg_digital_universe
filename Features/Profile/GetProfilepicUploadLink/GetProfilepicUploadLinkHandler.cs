@@ -13,7 +13,7 @@ public class GetProfilepicUploadLinkHandler(IBlobStorage blobStorage, AppDbConte
         var container = "staging";
         var profileId = await context.GetProfileId(request.UserId, ct);
         var key = $"profilepics/{profileId}/{Guid.CreateVersion7()}";
-        var url = blobStorage.GetUploadLink(container,key, request.ContentType, TimeSpan.FromMinutes(5));
+        var url = await blobStorage.GetUploadLink(container,key, request.ContentType, TimeSpan.FromMinutes(5));
         
         var storageFile = StorageFile.Create(container, key, profileId);
         context.StorageFiles.Add(storageFile);

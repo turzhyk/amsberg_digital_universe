@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Amsberg_digital_universe.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261114102351_Init")]
+    [Migration("20261119105306_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -77,6 +77,32 @@ namespace Amsberg_digital_universe.Migrations
                         .IsUnique();
 
                     b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.Common.Storage.StorageFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Container")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("StorageFiles");
                 });
 
             modelBuilder.Entity("Amsberg_digital_universe.Domain.Post.Post", b =>
@@ -250,6 +276,17 @@ namespace Amsberg_digital_universe.Migrations
                     b.Navigation("Parent");
 
                     b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("Amsberg_digital_universe.Domain.Common.Storage.StorageFile", b =>
+                {
+                    b.HasOne("Amsberg_digital_universe.Domain.Profile.Profile", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("Amsberg_digital_universe.Domain.Post.Post", b =>

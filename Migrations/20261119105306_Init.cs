@@ -99,6 +99,27 @@ namespace Amsberg_digital_universe.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "StorageFiles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Container = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StorageFiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StorageFiles_Profiles_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Profiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
@@ -169,6 +190,11 @@ namespace Amsberg_digital_universe.Migrations
                 table: "Profiles",
                 column: "Username",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StorageFiles_AuthorId",
+                table: "StorageFiles",
+                column: "AuthorId");
         }
 
         /// <inheritdoc />
@@ -176,6 +202,9 @@ namespace Amsberg_digital_universe.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "StorageFiles");
 
             migrationBuilder.DropTable(
                 name: "UserConfirmTokens");
