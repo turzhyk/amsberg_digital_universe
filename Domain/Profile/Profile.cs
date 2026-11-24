@@ -7,6 +7,7 @@ public class Profile
     public User.User User { get; init; } = null!;
     public string Username { get; private set; } = "";
     public string? IconUrl { get; private set; } 
+    public string? AvatarKey { get; private set; }
     public ICollection<Domain.Post.Post> Posts { get; init; } = new List<Domain.Post.Post>();
 
     public static Profile Create(Guid userId) => new()
@@ -25,5 +26,10 @@ public class Profile
     public void SetUsername(string username)
     {
         Username = username.Trim();
+    }
+
+    public void SetProfilepicUrl(string key)
+    {
+        AvatarKey = key;
     }
 }

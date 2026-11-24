@@ -55,7 +55,8 @@ namespace Amsberg_digital_universe.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IconUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    IconUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AvatarKey = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

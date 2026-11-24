@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Amsberg_digital_universe.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261119105306_Init")]
+    [Migration("20261122134209_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -168,6 +168,9 @@ namespace Amsberg_digital_universe.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AvatarKey")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IconUrl")
                         .HasColumnType("nvarchar(max)");

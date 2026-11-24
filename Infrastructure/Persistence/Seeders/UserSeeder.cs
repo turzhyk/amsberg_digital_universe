@@ -21,6 +21,7 @@ public class UserSeeder(AppDbContext context, TimeProvider time, IOptions<Hasher
         {
             var passwordHash = PasswordHasher.Hash("0000", Encoding.ASCII.GetBytes(_hasherOptions.Secret));
             var adminUser = User.Seed(adminId, "admin@local", "Admin", passwordHash, now);
+            adminUser.ConfirmEmail();
             var adminProfile = Profile.Seed(adminId, adminUser, "admin");
             context.Users.Add(adminUser);
             context.Profiles.Add(adminProfile);

@@ -15,6 +15,7 @@ using Amsberg_digital_universe.Infrastructure.Auth;
 using Amsberg_digital_universe.Infrastructure.Persistence;
 using Amsberg_digital_universe.Infrastructure.Storage;
 using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -47,6 +48,11 @@ builder.Services.AddMediatR(options => { options.RegisterServicesFromAssembly(ty
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<ITokenProvider, JwtTokenProvider>();
 
+
+// cors
+builder.Services.AddCors(o => { o.AddDefaultPolicy(p => { p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); }); });
+
+
 builder.Services.AddOpenApi();
 var connectionString = builder.Configuration
     .GetConnectionString("DbConnection");
@@ -54,13 +60,34 @@ var connectionString = builder.Configuration
 if (string.IsNullOrEmpty(connectionString))
     throw new Exception("Connection string is missing");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
+    options.UseSqlServer(connectionString));
 
-builder.Services.AddSingleton(x =>
+
+var blobOptions = builder.Configuration.GetSection("BlobStorage").Get<BlobStorageOptions>();
+
+
+//AZURE CONFIGS
+builder.Services.AddSingleton(x => { return new BlobServiceClient(blobOptions.ConnectionString); });
+if (!EF.IsDesignTime)
 {
-    var options = builder.Configuration.GetSection("BlobStorage").Get<BlobStorageOptions>();
-    return new BlobServiceClient(options.ConnectionString);
-});
+    var serviceClient = new BlobServiceClient(blobOptions.ConnectionString);
+    var properties = await serviceClient.GetPropertiesAsync();
+    properties.Value.Cors.Clear();
+    var corsRule = new BlobCorsRule
+    {
+        AllowedOrigins = "http://localhost:5173",
+        AllowedMethods = "GET, PUT, POST, DELETE, OPTIONS",
+        AllowedHeaders = "*",
+        ExposedHeaders = "*",
+        MaxAgeInSeconds = 3600
+    };
+
+    properties.Value.Cors.Add(corsRule);
+
+    await serviceClient.SetPropertiesAsync(properties.Value);
+}
+
+
 builder.Services.AddSingleton<IBlobStorage, AzureBlobStorage>();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -80,6 +107,7 @@ builder.Services.AddSwaggerGen(options =>
             [new OpenApiSecuritySchemeReference("Bearer", doc)] = []
         });
 });
+
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddHostedService<CleanupConfirmTokens>();
@@ -87,9 +115,17 @@ builder.Services.AddSeeders();
 
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await context.Database.MigrateAsync();
+}
+
 await app.Services.SeedDb();
 
-
+app.UseCors();
 app.MapAuth();
 app.MapPosts();
 app.MapProfiles();
@@ -97,12 +133,6 @@ app.MapProfiles();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-}
-
-using (var scope = app.Services.CreateScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await context.Database.MigrateAsync();
 }
 
 app.UseStaticFiles();

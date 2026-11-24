@@ -4,4 +4,5 @@ public record LoginResponse
 {
     public string Token{get;set;}
     public string RefreshToken { get; set; }
+    public bool EmailConfirmed { get; set; }
 }

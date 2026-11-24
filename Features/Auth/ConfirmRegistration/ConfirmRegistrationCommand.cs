@@ -1,5 +1,6 @@
+using Amsberg_digital_universe.Domain.User;
 using MediatR;
 
 namespace Amsberg_digital_universe.Features.Auth.ConfirmRegistration;
 
-public record ConfirmRegistrationCommand(string Code, Guid UserId):IRequest;
+public record ConfirmRegistrationCommand(string Code, Guid UserId):IRequest<EmailConfirmResult>;

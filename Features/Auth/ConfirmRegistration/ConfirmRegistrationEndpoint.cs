@@ -18,8 +18,8 @@ public static class ConfirmRegistrationEndpoint
                     return Results.Unauthorized();
 
                 var command = new ConfirmRegistrationCommand(code, Guid.Parse(userId));
-                await sender.Send(command, ct);
-                return Results.Ok();
+                var result = await sender.Send(command, ct);
+                return Results.Ok(result);
             }).RequireAuthorization();
     }
 }

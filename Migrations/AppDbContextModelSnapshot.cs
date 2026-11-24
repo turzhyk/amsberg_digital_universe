@@ -166,6 +166,9 @@ namespace Amsberg_digital_universe.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AvatarKey")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IconUrl")
                         .HasColumnType("nvarchar(max)");
 

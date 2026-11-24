@@ -39,11 +39,35 @@ public class AzureBlobStorage(BlobServiceClient client, IOptions<BlobStorageOpti
         return response;
     }
 
+    public async Task<Uri> GetPublicLink(string container, string key, TimeSpan ttl)
+    {
+        var blobClient = client.GetBlobContainerClient(container).GetBlobClient(key);
+        var sasUrl = blobClient.GenerateSasUri(BlobSasPermissions.Read, DateTimeOffset.UtcNow.Add(ttl));
+        
+        var publicUrl = new Uri(_options.PublicUrl);
+        var response = new UriBuilder(sasUrl)
+        {
+            Scheme = publicUrl.Scheme,
+            Host = publicUrl.Host,
+            Port = publicUrl.Port,
+        }.Uri;
+        return response;
+    }
     public async Task<BlobProperties?> GetPropertiesAsync(string container, string key, CancellationToken ct)
     {
-        var containerClient = client.GetBlobContainerClient(container);
-        var blobClient = containerClient.GetBlobClient(key);
-        var properties = await blobClient.GetPropertiesAsync(cancellationToken:ct);
-        return properties;
+        try
+        {
+            var containerClient = client.GetBlobContainerClient(container);
+            var blobClient = containerClient.GetBlobClient(key);
+            var properties = await blobClient.GetPropertiesAsync(cancellationToken: ct);
+
+            return properties;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+     
     }
 }

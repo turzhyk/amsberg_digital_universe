@@ -16,4 +16,9 @@ public class StorageFile
         Key = key,
         AuthorId = authorId
     };
+
+    public void ConfirmUpdate()
+    {
+        Status = StorageFileStatus.Confirmed;
+    }
 }

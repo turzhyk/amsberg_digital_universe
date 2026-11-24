@@ -8,7 +8,7 @@ public static class SetUsernameEndpoint
 {
     public static void AddRoute(IEndpointRouteBuilder app)
     {
-        app.MapPost("/username",
+        app.MapPut("/username",
             async ([FromQuery] string targetUsername, ClaimsPrincipal user, ISender sender, CancellationToken ct) =>
             {
                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;

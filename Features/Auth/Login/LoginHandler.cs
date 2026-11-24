@@ -22,6 +22,6 @@ public class LoginHandler(AppDbContext context, ITokenProvider tokenProvider, IO
         if (hashedPassword != user.PasswordHash)
             throw new UnauthorizedAccessException($"Email or password is incorrect");
         var jwtToken = tokenProvider.GetToken(user);
-        return new LoginResponse { Token = jwtToken, RefreshToken = "refresh" };
+        return new LoginResponse { Token = jwtToken, RefreshToken = "refresh", EmailConfirmed = user.IsEmailConfirmed()};
     }
 }

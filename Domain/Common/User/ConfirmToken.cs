@@ -46,10 +46,5 @@ public class ConfirmToken
         return EmailConfirmResult.Success;
     }
 
-    public enum EmailConfirmResult
-    {
-        Success,
-        Expired,
-        Wrong
-    }
+    
 }
