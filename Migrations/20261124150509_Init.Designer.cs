@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Amsberg_digital_universe.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261122134209_Init")]
+    [Migration("20261124150509_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -92,7 +92,11 @@ namespace Amsberg_digital_universe.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Key")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")

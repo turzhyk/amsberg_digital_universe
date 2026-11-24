@@ -6,14 +6,15 @@ using Microsoft.Extensions.Options;
 
 namespace Amsberg_digital_universe.Infrastructure.Storage;
 
-public class AzureBlobStorage(BlobServiceClient client, IOptions<BlobStorageOptions> options):IBlobStorage
+public class AzureBlobStorage(BlobServiceClient client, IOptions<BlobStorageOptions> options) : IBlobStorage
 {
     private readonly BlobStorageOptions _options = options.Value;
+
     public async Task<Uri> GetUploadLink(string container, string key, string contentType, TimeSpan ttl)
     {
         var containerClient = client.GetBlobContainerClient(container);
         await containerClient.CreateIfNotExistsAsync();
-        
+
         var blobClient = containerClient.GetBlobClient(key);
 
         var sasBuilder = new BlobSasBuilder
@@ -26,9 +27,9 @@ public class AzureBlobStorage(BlobServiceClient client, IOptions<BlobStorageOpti
         };
         sasBuilder.SetPermissions(BlobContainerSasPermissions.Read | BlobContainerSasPermissions.Write);
         var localLink = blobClient.GenerateSasUri(sasBuilder);
-        if(_options.PublicUrl is null)
+        if (_options.PublicUrl is null)
             throw new ArgumentException("PublicUrl is null, check your configuration");
-        
+
         var publicUrl = new Uri(_options.PublicUrl);
         var response = new UriBuilder(localLink)
         {
@@ -43,7 +44,7 @@ public class AzureBlobStorage(BlobServiceClient client, IOptions<BlobStorageOpti
     {
         var blobClient = client.GetBlobContainerClient(container).GetBlobClient(key);
         var sasUrl = blobClient.GenerateSasUri(BlobSasPermissions.Read, DateTimeOffset.UtcNow.Add(ttl));
-        
+
         var publicUrl = new Uri(_options.PublicUrl);
         var response = new UriBuilder(sasUrl)
         {
@@ -53,6 +54,7 @@ public class AzureBlobStorage(BlobServiceClient client, IOptions<BlobStorageOpti
         }.Uri;
         return response;
     }
+
     public async Task<BlobProperties?> GetPropertiesAsync(string container, string key, CancellationToken ct)
     {
         try
@@ -68,6 +70,19 @@ public class AzureBlobStorage(BlobServiceClient client, IOptions<BlobStorageOpti
             Console.WriteLine(e);
             throw;
         }
-     
+    }
+
+    public async Task<byte[]> GetFileAsync(string container, string key, CancellationToken ct)
+    {
+        var blobClient = client.GetBlobContainerClient(container).GetBlobClient(key);
+        var response = await blobClient.DownloadContentAsync(ct);
+        var file = response.Value.Content.ToArray();
+        return file;
+    }
+
+    public async Task<bool> DeleteAsync(string container, string key, CancellationToken ct)
+    {
+        var blobClient = client.GetBlobContainerClient(container).GetBlobClient(key);
+        return await blobClient.DeleteIfExistsAsync(cancellationToken: ct);
     }
 }

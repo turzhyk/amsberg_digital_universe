@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text;
 using Amsberg_digital_universe.Domain;
+using Amsberg_digital_universe.Domain.Common;
 using Amsberg_digital_universe.Domain.Common.Storage;
 using Amsberg_digital_universe.Domain.Extensions;
 using Amsberg_digital_universe.Features.Auth;
@@ -28,6 +29,8 @@ AuthOptions jwtOptions = builder.Configuration.GetSection("Jwt").Get<AuthOptions
 builder.Services.Configure<HasherOptions>(builder.Configuration.GetSection("Hasher"));
 builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.Configure<BlobStorageOptions>(builder.Configuration.GetSection("BlobStorage"));
+builder.Services.Configure<ImageValidationOptions>(nameof(ImageValidationProperty.Avatar),builder.Configuration.GetSection("ImageValidation:Avatar"));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
@@ -47,7 +50,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddMediatR(options => { options.RegisterServicesFromAssembly(typeof(RegisterCommand).Assembly); });
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<ITokenProvider, JwtTokenProvider>();
-
+builder.Services.AddSingleton<IImageValidator, ImageValidator>();
 
 // cors
 builder.Services.AddCors(o => { o.AddDefaultPolicy(p => { p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); }); });
@@ -111,6 +114,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddHostedService<CleanupConfirmTokens>();
+builder.Services.AddHostedService<CleanupOrphanFiles>();
 builder.Services.AddSeeders();
 
 

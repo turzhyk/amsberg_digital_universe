@@ -2,5 +2,5 @@
 
 public enum StorageFileStatus
 {
-    Pending, Denied, Confirmed
+    Pending, Rejected, Confirmed
 }
