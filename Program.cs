@@ -5,12 +5,9 @@ using Amsberg_digital_universe.Domain.Common;
 using Amsberg_digital_universe.Domain.Common.Storage;
 using Amsberg_digital_universe.Domain.Extensions;
 using Amsberg_digital_universe.Features.Auth;
-using Amsberg_digital_universe.Features.Auth.ConfirmRegistration;
-using Amsberg_digital_universe.Features.Auth.Login;
 using Amsberg_digital_universe.Features.Auth.Register;
-using Amsberg_digital_universe.Features.Auth.SendNewEmailCode;
+using Amsberg_digital_universe.Features.Feed;
 using Amsberg_digital_universe.Features.Posts;
-using Amsberg_digital_universe.Features.Posts.CreatePost;
 using Amsberg_digital_universe.Features.Profile;
 using Amsberg_digital_universe.Infrastructure.Auth;
 using Amsberg_digital_universe.Infrastructure.Persistence;
@@ -50,7 +47,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddMediatR(options => { options.RegisterServicesFromAssembly(typeof(RegisterCommand).Assembly); });
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<ITokenProvider, JwtTokenProvider>();
-builder.Services.AddSingleton<IImageValidator, ImageValidator>();
+builder.Services.AddSingleton<IImageValidator, SkiaSharpImageValidator>();
 
 // cors
 builder.Services.AddCors(o => { o.AddDefaultPolicy(p => { p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); }); });
@@ -133,6 +130,7 @@ app.UseCors();
 app.MapAuth();
 app.MapPosts();
 app.MapProfiles();
+app.MapFeed();
 
 if (app.Environment.IsDevelopment())
 {

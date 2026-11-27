@@ -30,4 +30,10 @@ public class StorageFile
         if (Status is not StorageFileStatus.Confirmed)
             Status = StorageFileStatus.Rejected;
     }
+
+    public void Delete()
+    {
+        if (Status is not StorageFileStatus.Deleted)
+            Status = StorageFileStatus.Deleted;
+    }
 }

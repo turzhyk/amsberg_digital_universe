@@ -7,6 +7,7 @@ public static class DbSeederExtension
     public static IServiceCollection AddSeeders(this IServiceCollection services)
     {
         services.AddScoped<UserSeeder>();
+        services.AddScoped<PostSeeder>();
         return services;
     }
 
@@ -15,6 +16,8 @@ public static class DbSeederExtension
         await using var scope = provider.CreateAsyncScope();
         var userSeeder = scope.ServiceProvider.GetRequiredService<UserSeeder>();
         await userSeeder.SeedUsers();
-        
+        var postSeeder = scope.ServiceProvider.GetRequiredService<PostSeeder>();
+        await postSeeder.SeedDb();
+
     }
 }

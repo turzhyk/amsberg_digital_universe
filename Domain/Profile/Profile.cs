@@ -28,8 +28,10 @@ public class Profile
         Username = username.Trim();
     }
 
-    public void SetProfilepicUrl(string key)
+    public string? SetProfilepicUrl(string key)
     {
+        var init = AvatarKey;
         AvatarKey = key;
+        return init;
     }
 }

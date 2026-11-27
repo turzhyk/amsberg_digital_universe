@@ -1,3 +1,4 @@
+using Amsberg_digital_universe.Domain.Common;
 using Amsberg_digital_universe.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ public class GlobalExceptionHandler(IProblemDetailsService service) : IException
             ArgumentNullException => StatusCodes.Status400BadRequest,
             KeyNotFoundException => StatusCodes.Status404NotFound,
             ConfirmTokenInvalidException => StatusCodes.Status404NotFound,
+            SeederException => StatusCodes.Status200OK,
             _ => StatusCodes.Status500InternalServerError,
         };
         var problemDetails = new ProblemDetails
